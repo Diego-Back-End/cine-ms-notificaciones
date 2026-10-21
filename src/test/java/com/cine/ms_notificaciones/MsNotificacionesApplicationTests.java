@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(properties = {
         "spring.rabbitmq.listener.simple.auto-startup=false",
-        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration"
+        "app.mail.enabled=false"
 })
 class MsNotificacionesApplicationTests {
 
