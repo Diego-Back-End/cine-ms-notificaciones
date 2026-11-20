@@ -57,13 +57,19 @@ public class NotificacionService {
         }
 
         String asunto = "Tu compra no se pudo completar";
+        String motivo = message.getMotivo();
+        String explicacion = switch (motivo == null ? "" : motivo) {
+            case "CANCELADA_POR_USUARIO" -> "cancelaste la compra desde la pantalla de pago";
+            case "EXPIRADA" -> "no se completó el pago a tiempo";
+            default -> "la compra no pudo completarse";
+        };
         String cuerpo = """
                 <html>
                 <body>
-                <p>La reserva N° %s no se completó (motivo: %s) y los asientos fueron liberados.</p>
+                <p>La reserva N° %s no se completó porque %s. Los asientos fueron liberados.</p>
                 </body>
                 </html>
-                """.formatted(message.getReservaId(), message.getMotivo());
+                """.formatted(message.getReservaId(), explicacion);
 
         if (!mailEnabled) {
             log.info("Correo deshabilitado (app.mail.enabled=false). Simulando envío -> para={}, asunto={}, cuerpo=\n{}",
