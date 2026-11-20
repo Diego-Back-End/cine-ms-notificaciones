@@ -17,7 +17,13 @@ public class ReservaListener {
     @RabbitListener(queues = "notificaciones.reserva.confirmada")
     public void onReservaConfirmada(ReservaConfirmadaMessage message) {
         log.info("Mensaje de reserva confirmada recibido: reservaId={}", message.getReservaId());
-        notificacionService.enviarConfirmacion(message);
+        try {
+            notificacionService.enviarConfirmacion(message);
+        } catch (Exception e) {
+            log.error("Error al enviar confirmación de reserva: reservaId={}, motivo={}",
+                    message.getReservaId(), e.getMessage(), e);
+            throw e;
+        }
     }
 
 }
